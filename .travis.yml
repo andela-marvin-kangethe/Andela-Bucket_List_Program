@@ -1,0 +1,12 @@
+language: python
+python:
+  - "3.5"
+cache: pip
+install:
+  - pip install -r requirements.txt
+script:
+  - nosetests
+notifications:
+  slack: andela:zDaKHAj3IUjFYaCP193NvLzE
+  on_success: always
+  email: false
