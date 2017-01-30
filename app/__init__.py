@@ -1,7 +1,7 @@
 from flask import Flask, Blueprint
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
-from .. import config
+from .config import *
 
 db = SQLAlchemy()
 
@@ -12,7 +12,7 @@ def create_app(config_name):
     """
     application = Flask(__name__)
 
-    application.config.from_object(Config[config_name])
+    application.config.from_object(config[config_name])
 
     db.init_app(application)
 
