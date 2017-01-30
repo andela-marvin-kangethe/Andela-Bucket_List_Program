@@ -1,7 +1,7 @@
 from flask import Flask, Blueprint
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
-from config import config
+from config import *
 
 db = SQLAlchemy()
 
