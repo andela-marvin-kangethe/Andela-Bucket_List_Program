@@ -26,4 +26,4 @@ def validate_parameter_is_digit(number):
 		else:
 			return False	
 	except Exception as e:
-		raise False
+		return False
