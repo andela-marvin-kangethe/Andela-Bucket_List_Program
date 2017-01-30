@@ -101,3 +101,8 @@ ENV/
 ./migrations/*
 migrations/*
 /migrations/*
+
+#database content
+
+*.db
+/*.db
