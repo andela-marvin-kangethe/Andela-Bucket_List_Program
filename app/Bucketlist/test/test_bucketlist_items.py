@@ -20,7 +20,7 @@ class testBucketlistItems(BaseTest):
 		user.hash_password('12345')
 		bucket = Bucketlist(
 			bucket_name='Python',
-			bucket_id=1,4
+			bucket_id=1,
 			created_by=1
 			)
 		db.session.add(user)
