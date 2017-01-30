@@ -10,6 +10,5 @@ class BaseTest(TestCase):
 		app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(base_dir, 'test.db')
 		app.config['TESTING'] = True
 		app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
-		
 		return app
 
