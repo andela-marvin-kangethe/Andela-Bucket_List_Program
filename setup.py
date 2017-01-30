@@ -5,4 +5,4 @@ setup(
    author='Marvin Kang\'ethe',
    author_email='marvin.kangethe@andela.com',
    version='1.0.0'
-)
+	)
