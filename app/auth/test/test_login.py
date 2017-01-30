@@ -50,7 +50,4 @@ class testLogin(BaseTest):
 		db.drop_all()	    
 
 if __name__ == '__main__':
-		unittest.main()		
-
-
-   
+		unittest.main()
