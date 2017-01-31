@@ -102,7 +102,7 @@ Access the endpoints using your preferred client e.g Postman
 
 		{
 		  	'message':'Registration successfull',
-        'Authorization':GENERATED ACCESS TOKEN
+        		'Authorization':GENERATED ACCESS TOKEN
 		}
 
 - POST http://127.0.0.1:5000/api/v1/auth/login will login user and generate a token.
@@ -122,14 +122,14 @@ Access the endpoints using your preferred client e.g Postman
 	body
 
 		{   
-			"name":"Python"
+			"bucket_name":"Python"
 		}
 
 	response
 
 		{
 		  	"message": "New Bucketlist created",
-        "status_code": 200
+       			"status_code": 200
 		}
 
 - GET http://127.0.0.1:5000/api/v1/bucketlists/ displays all of the users bucket lists.
@@ -140,22 +140,22 @@ Access the endpoints using your preferred client e.g Postman
 
 	response
 
-      {
-          "bucketlists":[
-              {
-                  "next": "http://127.0.0.1:5000/api/v1/bucketlists?start=0&limit=20"
-              },
-              {
-                  "back": "http://127.0.0.1:5000/api/v1/bucketlists?start=0&limit=20"
-              },
-              {
-                  "bucket_id": 7,
-                  "bucket_items": [],
-                  "bucket_name": "Python",
-                  "bucket_owner_id": 2
-              }
-          ]
-       }
+	      {
+		  "bucketlists":[
+		      {
+			  "next": "http://127.0.0.1:5000/api/v1/bucketlists?start=0&limit=20"
+		      },
+		      {
+			  "back": "http://127.0.0.1:5000/api/v1/bucketlists?start=0&limit=20"
+		      },
+		      {
+			  "bucket_id": 7,
+			  "bucket_items": [],
+			  "bucket_name": "Python",
+			  "bucket_owner_id": 2
+		      }
+		  ]
+	       }
 - POST http://127.0.0.1:5000/api/v1/bucketlists/{bucket_id}/items create a new item in a bucket list
 	
 	header
@@ -165,12 +165,13 @@ Access the endpoints using your preferred client e.g Postman
 	body
 
 		{   
-			"name":"Django framework"
+			"item_name":"Django framework",
+			"task_done":"False"
 		}
 
 	response
 
 		{   
 			'message':'New Bucketlist item created',
-      'status_code':200
-	   }
+      			'status_code':200
+	   	}
