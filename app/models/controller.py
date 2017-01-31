@@ -30,12 +30,17 @@ def get_all_bucketlists(user_id, limit=20, start_value=0, search=None, main_url=
     query = db.session.query(Bucketlist).filter_by(created_by=user_id).all()
     no_of_buckets = len(query)
 
-    query = db.session.query(Bucketlist).filter(
-        Bucketlist.bucket_name.ilike('%{}%'.format(search))).filter_by(created_by=user_id).slice(start_value,limit+start_value).all()
     search_list = []
-    for items in query:
-        search_list.append(items.bucket_name)
+    if search != None:
+        query = db.session.query(Bucketlist).filter(
+            Bucketlist.bucket_name.ilike('%{}%'.format(search))).filter_by(created_by=user_id).slice(start_value,limit+start_value).all()
+        for items in query:
+            search_list.append(items.bucket_name)
 
+    else:
+        query = db.session.query(Bucketlist).filter_by(created_by=user_id).slice(start_value,limit+start_value).all()
+    
+    
     if limit > 100:
         return [{"message":"excessive requested amount"}]
     elif len(search_list) > 0:
@@ -78,8 +83,11 @@ def get_all_bucketlists(user_id, limit=20, start_value=0, search=None, main_url=
             else:
                 break
 
-            
-    return this_bucket
+    print(len(this_bucket))           
+    if len(this_bucket) == 2:
+        return []
+    else:
+        return this_bucket
 
 def set_pagination(bucket, start, limit, bucket_size, main_url):
     
