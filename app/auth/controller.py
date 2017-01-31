@@ -5,7 +5,12 @@ from flask import jsonify, request
 
 from app.models.controller import *
 from app.models.database import User
-from app.validator.validate import *
+from app.validator.validate import (
+	validate_password_length,
+	validate_username_format,
+	validate_email_format,
+	validate_parameter_is_digit
+	)
 
 
 class Login(Resource):
