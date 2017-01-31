@@ -34,8 +34,15 @@ class BucketList(Resource):
                 search_value,
                 base_root
             )
-        
-        return jsonify({'bucketlists':all_buckets})
+        if all_buckets == False:
+            return jsonify({'message':'Searched data not found'})
+        else:  
+            print(len(all_buckets))
+            if len(all_buckets) == 0:
+                return jsonify({'message':'No bucket items to display.'})
+            else:
+                return jsonify({'bucketlists':all_buckets})
+
         
     def post(self):
         try:
