@@ -44,7 +44,7 @@ class BucketList(Resource):
         except Exception as e:
             abort(401, message='Access forbidden, Login to continue.')
 
-        data = json.loads(request.get_data())
+        data = json.loads(request.get_data(as_text=True))
         if data:
             try:
                 bucket_name = data['bucket_name']
@@ -105,7 +105,7 @@ class ListBucketlist(Resource):
         except Exception as e:
             abort(401, message='Access forbidden, Login to continue.')
 
-        data = json.loads(request.get_data())
+        data = json.loads(request.get_data(as_text=True))
         if data:
             try:
                 new_bucket_name = data['new_bucket_name']
@@ -191,7 +191,7 @@ class BucketListItem(Resource):
         except Exception as e:
             abort(401, message='Access forbidden, Login to continue.')
 
-        data = json.loads(request.get_data())
+        data = json.loads(request.get_data(as_text=True))
         if data:
             try:
                 new_item_name = data['item_name']
@@ -267,7 +267,7 @@ class ListBucketlistItem(Resource):
         except Exception as e:
             abort(401, message='Access forbidden, Login to continue.')
 
-        data = json.loads(request.get_data())
+        data = json.loads(request.get_data(as_text=True))
         if data:
             try:
                 new_item_name = data['new_item_name']
