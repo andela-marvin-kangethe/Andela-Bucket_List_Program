@@ -73,8 +73,7 @@ def get_all_bucketlists(user_id, limit=20, start_value=0, search=None, main_url=
             else:
                 break
 
-
-
+            
     return this_bucket
 
 def set_pagination(bucket, start, limit, bucket_size, main_url):
