@@ -29,7 +29,7 @@ class User(db.Model):
         return self.access_token
 
     def verify_access_token(self, access_token):
-        return jwt.decode(access_token,"secret")
+        return jwt.decode(access_token,Config.SECRET_KEY)
 
 class Bucketlist(db.Model):
     __tablename__ = 'bucketlist'
