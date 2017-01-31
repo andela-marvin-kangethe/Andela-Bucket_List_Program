@@ -1,4 +1,5 @@
 import re
+from flask_restful import abort
 from app import db
 from passlib.apps import custom_app_context as pwd_context
 from app.models.database import User, Bucketlist, Bucket_items
@@ -29,10 +30,11 @@ def get_all_bucketlists(user_id, limit=20, start_value=0, search=None, main_url=
     query = db.session.query(Bucketlist).filter_by(created_by=user_id).all()
     no_of_buckets = len(query)
 
-    query = db.session.query(Bucketlist).filter_by(created_by=user_id).slice(start_value,limit+start_value).all()
-    search_string = get_searched_data(query,"String")
-    search_list = re.findall(r'\b[\w]*{}[\w]*'.format(search),search_string)
-    
+    query = db.session.query(Bucketlist).filter(
+        Bucketlist.bucket_name.ilike('%{}%'.format(search))).filter_by(created_by=user_id).slice(start_value,limit+start_value).all()
+    search_list = []
+    for items in query:
+        search_list.append(items.bucket_name)
 
     if limit > 100:
         return [{"message":"excessive requested amount"}]
@@ -55,6 +57,9 @@ def get_all_bucketlists(user_id, limit=20, start_value=0, search=None, main_url=
                 limit-=1
             else:
                 continue
+    elif len(search_list) == 0 and search!= None:
+        return False
+
     else:
         this_bucket = []
         set_pagination(this_bucket, start_value, limit, no_of_buckets, main_url)
