@@ -18,6 +18,7 @@ def internal_server_error(e):
 		'message':'Internal Server Error',
 		'status_code':500
 		})
+	
 @app.errorhandler(404)
 def resource_not_found(e):
 	return jsonify({
@@ -42,7 +43,6 @@ api.add_resource(ListBucketlist, "/bucketlists/<bucket_id>", endpoint="modifyspe
 
 #Create a new bucket item for a specific bucket 	POST
 api.add_resource(BucketListItem, "/bucketlists/<bucket_id>/items", endpoint="createnewbucketitem")
-
 
 #Edit the content of a specific bucket item 		PUT
 #Delete an existing bucketlist item 				DELETE
