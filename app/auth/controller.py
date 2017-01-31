@@ -24,7 +24,7 @@ class Login(Resource):
 						" /auth/login to get started."})
 
 	def post(self):
-		data = json.loads(request.get_data())
+		data = json.loads(request.get_data(as_text=True))
 		if data:
 			try:
 				username = data['username']
@@ -66,7 +66,7 @@ class Register(Resource):
 						" /auth/login to get started."})
 
 	def post(self):
-		data = json.loads(request.get_data())
+		data = json.loads(request.get_data(as_text=True))
 
 		if data:
 			try:
@@ -100,7 +100,7 @@ class Register(Resource):
 				
 			else:
 				return jsonify({
-					'message':'Invalid credentials passed',
+					'message':'Invalid credentials format passed',
 					'status_code':403
 					})	
 
