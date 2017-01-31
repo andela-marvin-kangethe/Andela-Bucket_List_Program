@@ -4,7 +4,12 @@ from flask_restful import Resource, abort
 from flask import jsonify, request
 from app.models.controller import *
 from app.models.database import User, Bucketlist, Bucket_items
-from app.validator.validate import *
+from app.validator.validate import (
+    validate_password_length,
+    validate_username_format,
+    validate_email_format,
+    validate_parameter_is_digit
+    )
 from config import Config
 
 
@@ -35,6 +40,7 @@ class BucketList(Resource):
     def post(self):
         try:
             get_user_id(request.headers.get('Authorization'))
+            
         except Exception as e:
             abort(401, message='Access forbidden, Login to continue.')
 
