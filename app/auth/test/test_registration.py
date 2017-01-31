@@ -35,7 +35,7 @@ class testRegistration(BaseTest):
 		response = self.client.post(url_for('register'), data=data, headers=headers)
 		output = json.loads(response.get_data(as_text=True))
 		self.assertEqual(403, output['status_code'])
-		self.assertIn('Invalid credentials format passed', output['message'])
+		self.assertIn('Invalid ', output['message'])
 
 	def test_user_already_exist(self):
 		data = json.dumps({'username':'andrew','password':'123ded', 'email':'marvin@gmail.com'})
