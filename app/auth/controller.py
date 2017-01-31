@@ -47,7 +47,7 @@ class Login(Resource):
 					})
 					
 			else:
-				abort(403, message='Invalid user credentials provided.')	
+				abort(403, message='Invalid user credentials provided.No user with that name or paswword exists.')	
 			
 		else:
 			return jsonify({
@@ -76,31 +76,42 @@ class Register(Resource):
 			except Exception as e:
 				abort(401, message='Registration credentials not found.')
 			
-			if validate_username_format(username) and \
-				validate_password_length(password) and \
-				validate_email_format(email):
+			if validate_username_format(username):
 
-				if check_new_user_credentials(username, email):
+				if validate_password_length(password):
 
-					user = User(username=username, email=email, access_token='None')
-					user.hash_password(password)
-					save_new_user(user)
-					
-					access_token = user.generate_access_token()
-					update_access_token(access_token,user.user_id)
+					if validate_email_format(email):
 
-					return jsonify({
-						'message':'Registration successfull',
-						'Authorization':access_token
-						})
+						if check_new_user_credentials(username, email):
 
-					
+							user = User(username=username, email=email, access_token='None')
+							user.hash_password(password)
+							save_new_user(user)
+							
+							access_token = user.generate_access_token()
+							update_access_token(access_token,user.user_id)
+
+							return jsonify({
+								'message':'Registration successfull',
+								'Authorization':access_token
+								})
+						
+						else:
+							abort(403, message='User already exists.')
+					else:
+						return jsonify({
+							'message':'Invalid email format provided.',
+							'status_code':403
+							})
 				else:
-					abort(403, message='User already exists.')	
+					return jsonify({
+						'message':'Password must be longer than 4 characters.',
+						'status_code':403
+						})					
 				
 			else:
 				return jsonify({
-					'message':'Invalid credentials format passed',
+					'message':'Invalid username format provided',
 					'status_code':403
 					})	
 
