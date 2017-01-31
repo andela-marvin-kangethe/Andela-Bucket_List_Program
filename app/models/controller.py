@@ -13,12 +13,13 @@ def check_new_user_credentials(username, email):
 
     try:
         query = db.session.query(User).filter_by(email=email).first()
+        print(query.email)
         if query:
             return False
         else:
             return True
     except Exception as e:
-        return False
+        return True
 
 def save_new_user(user):
     db.session.add(user)
