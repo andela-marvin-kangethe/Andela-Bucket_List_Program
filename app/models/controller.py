@@ -10,6 +10,7 @@ def update_access_token(access_token, user_id):
     query.access_token = access_token
     db.session.commit()
 
+
 def check_new_user_credentials(username, email):
 
     try:
@@ -18,9 +19,11 @@ def check_new_user_credentials(username, email):
     except Exception as e:
         return True
 
+
 def save_new_user(user):
     db.session.add(user)
     db.session.commit()
+
 
 def get_all_bucketlists(user_id, limit=20, start_value=0, search='', main_url='http:127.0.0.1:5000/api/v1'):
     query = db.session.query(Bucketlist).filter_by(created_by=user_id).all()
@@ -31,35 +34,35 @@ def get_all_bucketlists(user_id, limit=20, start_value=0, search='', main_url='h
         query = db.session.query(Bucketlist).filter(
             Bucketlist.bucket_name.ilike(
                 '%{}%'.format(search))).filter_by(
-                    created_by=user_id).slice(start_value,limit+start_value).all()
+                    created_by=user_id).slice(start_value, limit+start_value).all()
         for items in query:
             search_list.append(items.bucket_name)
 
     else:
         query = db.session.query(Bucketlist).filter_by(
-            created_by=user_id).slice(start_value,limit+start_value).all()
-    
-    
+            created_by=user_id).slice(start_value, limit+start_value).all()
+
     if limit > 100:
-        return [{"message":"excessive requested amount"}]
+        return [{"message": "excessive requested amount"}]
 
     elif len(search_list) > 0:
         this_bucket = []
-        set_pagination(this_bucket, start_value, limit, no_of_buckets, main_url)
-    
+        set_pagination(
+            this_bucket, start_value, limit, no_of_buckets, main_url)
+
         for bucket in query:
             if no_of_buckets != 0 and limit != 0 and bucket.bucket_name in search_list:
                 all_buckets = {}
                 all_buckets['bucket_name'] = bucket.bucket_name
                 all_buckets['bucket_id'] = bucket.bucket_id
                 all_buckets['bucket_owner_id'] = bucket.created_by
-                all_buckets['bucket_items'] = get_bucketlist_items(bucket.bucket_id)
+                all_buckets['bucket_items'] = get_bucketlist_items(
+                    bucket.bucket_id)
 
-                                
                 this_bucket.append(all_buckets)
-                            
-                no_of_buckets-=1
-                limit-=1
+
+                no_of_buckets -= 1
+                limit -= 1
             else:
                 continue
     elif len(search_list) == 0 and search:
@@ -68,7 +71,8 @@ def get_all_bucketlists(user_id, limit=20, start_value=0, search='', main_url='h
     else:
         this_bucket = []
         if len(query) > 20:
-            set_pagination(this_bucket, start_value, limit, no_of_buckets, main_url)
+            set_pagination(
+                this_bucket, start_value, limit, no_of_buckets, main_url)
 
         for bucket in query:
             if (no_of_buckets != 0 and limit != 0):
@@ -76,12 +80,13 @@ def get_all_bucketlists(user_id, limit=20, start_value=0, search='', main_url='h
                 all_buckets['bucket_name'] = bucket.bucket_name
                 all_buckets['bucket_id'] = bucket.bucket_id
                 all_buckets['bucket_owner_id'] = bucket.created_by
-                all_buckets['bucket_items'] = get_bucketlist_items(bucket.bucket_id)
-                                
+                all_buckets['bucket_items'] = get_bucketlist_items(
+                    bucket.bucket_id)
+
                 this_bucket.append(all_buckets)
-                            
-                no_of_buckets-=1
-                limit-=1
+
+                no_of_buckets -= 1
+                limit -= 1
             else:
                 break
 
@@ -90,17 +95,23 @@ def get_all_bucketlists(user_id, limit=20, start_value=0, search='', main_url='h
     else:
         return this_bucket
 
+
 def set_pagination(bucket, start, limit, bucket_size, main_url):
-    
+
     if start+limit < bucket_size:
-        bucket.append({"next":"{}/bucketlists?start={}&limit={}".format(main_url, start+limit, limit)})
+        bucket.append(
+            {"next": "{}/bucketlists?start={}&limit={}".format(main_url, start+limit, limit)})
     else:
-        bucket.append({"next":"{}/bucketlists?start={}&limit={}".format(main_url, 0, limit)})
+        bucket.append(
+            {"next": "{}/bucketlists?start={}&limit={}".format(main_url, 0, limit)})
 
     if start-limit > 0:
-        bucket.append({"back":"{}/bucketlists?start={}&limit={}".format(main_url, start-limit, limit)})
+        bucket.append(
+            {"back": "{}/bucketlists?start={}&limit={}".format(main_url, start-limit, limit)})
     else:
-        bucket.append({"back":"{}/bucketlists?start={}&limit={}".format(main_url, 0, limit)})
+        bucket.append(
+            {"back": "{}/bucketlists?start={}&limit={}".format(main_url, 0, limit)})
+
 
 def get_searched_data(query, format_passed=None):
     list_data = []
@@ -113,20 +124,23 @@ def get_searched_data(query, format_passed=None):
     else:
         return list_data
 
+
 def get_bucketlist(user_id, bucket_id):
-    query = db.session.query(Bucketlist).filter_by(created_by=user_id, bucket_id=bucket_id).first()
+    query = db.session.query(Bucketlist).filter_by(
+        created_by=user_id, bucket_id=bucket_id).first()
 
     this_bucket = []
     all_buckets = {}
-    
+
     all_buckets['bucket_name'] = query.bucket_name
     all_buckets['bucket_id'] = query.bucket_id
     all_buckets['bucket_owner_id'] = query.created_by
     all_buckets['created_on'] = query.date_created
     all_buckets['last_modified'] = query.date_modified
 
-    query = db.session.query(Bucket_items).filter_by(source_item_id=bucket_id).all()
-    
+    query = db.session.query(Bucket_items).filter_by(
+        source_item_id=bucket_id).all()
+
     this_bucket_item = []
     for items in query:
         all_bucket_items = {}
@@ -139,11 +153,11 @@ def get_bucketlist(user_id, bucket_id):
         this_bucket_item.append(all_bucket_items)
 
     all_buckets['bucket_items'] = this_bucket_item
-    
 
     this_bucket.append(all_buckets)
 
-    return this_bucket  
+    return this_bucket
+
 
 def get_bucketlist_items(bucket_id):
     query = db.session.query(Bucket_items).filter_by(source_item_id=bucket_id)
@@ -158,14 +172,18 @@ def get_bucketlist_items(bucket_id):
 
         this_bucket_item.append(all_bucket_items)
 
-    return this_bucket_item 
+    return this_bucket_item
+
 
 def get_specific_bucket_item(bucket_id, item_id):
-    query = db.session.query(Bucket_items).filter_by(source_item_id=bucket_id, item_id=item_id).first()
+    query = db.session.query(Bucket_items).filter_by(
+        source_item_id=bucket_id, item_id=item_id).first()
     return query
 
+
 def delete_bucketlist(user_id, bucket_id):
-    query = db.session.query(Bucketlist).filter_by(created_by=user_id, bucket_id=bucket_id)
+    query = db.session.query(Bucketlist).filter_by(
+        created_by=user_id, bucket_id=bucket_id)
     query.delete()
     query = db.session.query(Bucket_items).filter_by(source_item_id=bucket_id)
     query.delete()
@@ -173,8 +191,10 @@ def delete_bucketlist(user_id, bucket_id):
     db.session.commit()
     return get_all_bucketlists(user_id)
 
+
 def edit_bucket_item(user_id, bucket_id, item_id, new_name, task_done, modified_time):
-    query = db.session.query(Bucket_items).filter_by(source_item_id=bucket_id, item_id=item_id).first()
+    query = db.session.query(Bucket_items).filter_by(
+        source_item_id=bucket_id, item_id=item_id).first()
     query.item_name = new_name
     query.date_modified = modified_time
     query.task_done = task_done
@@ -182,29 +202,36 @@ def edit_bucket_item(user_id, bucket_id, item_id, new_name, task_done, modified_
 
     return get_bucketlist(user_id, bucket_id)
 
-def edit_bucketlist(user_id, bucket_id,new_name, modified_time):
-    query = db.session.query(Bucketlist).filter_by(created_by=user_id, bucket_id=bucket_id).first()
+
+def edit_bucketlist(user_id, bucket_id, new_name, modified_time):
+    query = db.session.query(Bucketlist).filter_by(
+        created_by=user_id, bucket_id=bucket_id).first()
     query.bucket_name = new_name
     query.date_modified = modified_time
     db.session.commit()
 
     return get_bucketlist(user_id, bucket_id)
 
+
 def delete_bucket_list_item(user_id, bucket_id, item_id):
-    query = db.session.query(Bucket_items).filter_by(source_item_id=bucket_id, item_id=item_id)
+    query = db.session.query(Bucket_items).filter_by(
+        source_item_id=bucket_id, item_id=item_id)
     query.delete()
     db.session.commit()
 
     return get_bucketlist(user_id, bucket_id)
-    
+
+
 def get_user_name(user_id):
     query = db.session.query(User).filter_by(user_id=user_id).first()
     return query.username
+
 
 def get_user_id(access_token):
     query = db.session.query(User).filter_by(access_token=access_token).first()
     value = query.user_id
     return value
+
 
 def save_new_bucketlist(bucketlist, access_token):
     user = db.session.query(User).filter_by(access_token=access_token).first()
@@ -212,14 +239,18 @@ def save_new_bucketlist(bucketlist, access_token):
     db.session.add(bucketlist)
     db.session.commit()
 
+
 def save_new_bucketlist_item(bucketlist, user_id, bucket_id):
-    bucket = db.session.query(Bucketlist).filter_by(created_by=user_id, bucket_id=bucket_id).first()
+    bucket = db.session.query(Bucketlist).filter_by(
+        created_by=user_id, bucket_id=bucket_id).first()
     bucket.items_list.append(bucketlist)
     db.session.add(bucketlist)
     db.session.commit()
 
+
 def hash_password(password):
     return pwd_context.encrypt(password)
+
 
 def verify_password(password, username):
     value = db.session.query(User).filter_by(username=username).first()
@@ -232,18 +263,18 @@ def verify_user_credentials(username, password):
         value = verify_password(password, username)
     else:
         return {
-            "message":"login failed",
-            "status_code":403
-            }
+            "message": "login failed",
+            "status_code": 403
+        }
 
     if value == True:
         return {
-            "message":"login successful",
-            "status_code":200, 
-            "user":current_user
-            }
+            "message": "login successful",
+            "status_code": 200,
+            "user": current_user
+        }
     else:
         return {
-            "message":"login failed",
-            "status_code":403
-            }
+            "message": "login failed",
+            "status_code": 403
+        }
