@@ -14,11 +14,7 @@ def check_new_user_credentials(username, email):
 
     try:
         query = db.session.query(User).filter_by(email=email).first()
-        print(query.email)
-        if query:
-            return False
-        else:
-            return True
+        return False
     except Exception as e:
         return True
 
@@ -26,23 +22,27 @@ def save_new_user(user):
     db.session.add(user)
     db.session.commit()
 
-def get_all_bucketlists(user_id, limit=20, start_value=0, search=None, main_url='http:127.0.0.1:5000/api/v1'):
+def get_all_bucketlists(user_id, limit=20, start_value=0, search='', main_url='http:127.0.0.1:5000/api/v1'):
     query = db.session.query(Bucketlist).filter_by(created_by=user_id).all()
     no_of_buckets = len(query)
 
     search_list = []
-    if search != None:
+    if search:
         query = db.session.query(Bucketlist).filter(
-            Bucketlist.bucket_name.ilike('%{}%'.format(search))).filter_by(created_by=user_id).slice(start_value,limit+start_value).all()
+            Bucketlist.bucket_name.ilike(
+                '%{}%'.format(search))).filter_by(
+                    created_by=user_id).slice(start_value,limit+start_value).all()
         for items in query:
             search_list.append(items.bucket_name)
 
     else:
-        query = db.session.query(Bucketlist).filter_by(created_by=user_id).slice(start_value,limit+start_value).all()
+        query = db.session.query(Bucketlist).filter_by(
+            created_by=user_id).slice(start_value,limit+start_value).all()
     
     
     if limit > 100:
         return [{"message":"excessive requested amount"}]
+
     elif len(search_list) > 0:
         this_bucket = []
         set_pagination(this_bucket, start_value, limit, no_of_buckets, main_url)
@@ -62,12 +62,14 @@ def get_all_bucketlists(user_id, limit=20, start_value=0, search=None, main_url=
                 limit-=1
             else:
                 continue
-    elif len(search_list) == 0 and search!= None:
+    elif len(search_list) == 0 and search:
         return False
 
     else:
         this_bucket = []
-        set_pagination(this_bucket, start_value, limit, no_of_buckets, main_url)
+        if len(query) > 20:
+            set_pagination(this_bucket, start_value, limit, no_of_buckets, main_url)
+
         for bucket in query:
             if (no_of_buckets != 0 and limit != 0):
                 all_buckets = {}
@@ -83,8 +85,7 @@ def get_all_bucketlists(user_id, limit=20, start_value=0, search=None, main_url=
             else:
                 break
 
-    print(len(this_bucket))           
-    if len(this_bucket) == 2:
+    if len(this_bucket) == 0:
         return []
     else:
         return this_bucket
