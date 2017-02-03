@@ -34,7 +34,7 @@ api.add_resource(Login, "/auth/login", endpoint="login")
 api.add_resource(Register, "/auth/register", endpoint="register")
 
 #Get all buckests 	GET
-api.add_resource(BucketList, "/bucketlists/", endpoint="viewallbucketlist")
+api.add_resource(BucketList, "/bucketlists", endpoint="viewallbucketlist")
 
 #Get the content of specific id 			GET
 #Edit the content of a specific bucket 		PUT
