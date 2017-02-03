@@ -24,7 +24,7 @@ class BucketList(Resource):
 
         start_point = request.args.get('start') or 0
         limit_size = request.args.get('limit') or 20
-        search_value = request.args.get('q') or None
+        search_value = request.args.get('q')
         base_root = "{}{}".format(request.url_root.decode('utf-8'), Config.API_ROOT)
 
         all_buckets = get_all_bucketlists(
@@ -37,7 +37,6 @@ class BucketList(Resource):
         if all_buckets == False:
             return jsonify({'message':'Searched data not found'})
         else:  
-            print(len(all_buckets))
             if len(all_buckets) == 0:
                 return jsonify({'message':'No bucket items to display.'})
             else:
@@ -115,7 +114,7 @@ class ListBucketlist(Resource):
         data = json.loads(request.get_data(as_text=True))
         if data:
             try:
-                new_bucket_name = data['new_bucket_name']
+                new_bucket_name = data['bucket_name']
             except Exception as e:
                 abort(401, message='Missing new data.')
 
@@ -204,7 +203,6 @@ class BucketListItem(Resource):
                 new_item_name = data['item_name']
                 date_created = datetime.datetime.now()
                 date_modified = datetime.datetime.now()
-                task_done = data['task_done'] or 'False'
             except Exception as e:
                 abort(401, message='No bucketlist item data passed.')
             
@@ -226,7 +224,7 @@ class BucketListItem(Resource):
                                 item_name = new_item_name,
                                 date_created = str(date_created),
                                 date_modified = str(date_modified),
-                                task_done = task_done
+                                task_done = False
                                 )
                 save_new_bucketlist_item(
                     bucket_item,
@@ -277,8 +275,7 @@ class ListBucketlistItem(Resource):
         data = json.loads(request.get_data(as_text=True))
         if data:
             try:
-                new_item_name = data['new_item_name']
-                task_done = data['task_done'] or 'False'
+                new_item_name = data['item_name']
             except Exception as e:
                 abort(401, message='Missing new data.') 
             
@@ -315,7 +312,7 @@ class ListBucketlistItem(Resource):
                     bucket_id = bucket_id,
                     item_id = item_id,
                     new_name = new_item_name,
-                    task_done = task_done,
+                    task_done = False,
                     modified_time= datetime.datetime.now()
                     )
                     
